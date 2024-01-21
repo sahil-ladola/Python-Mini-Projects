@@ -1,44 +1,48 @@
 from turtle import Screen
-from paddle import Paddle
-from ball import Ball
+from snake import Snake
+from food import Food
 from scoreboard import Scoreboard
 import time
 
 screen = Screen()
+screen.setup(height=600, width=600)
 screen.bgcolor("black")
-screen.setup(800, 600)
-screen.title("Pong")
+screen.title("Snake Game")
 screen.tracer(0)
 
-r_paddle = Paddle((350, 0))
-l_paddle = Paddle((-350, 0))
-ball = Ball()
+snake = Snake()
+food = Food()
 score = Scoreboard()
 
 screen.listen()
-screen.onkey(r_paddle.move_up, "Up")
-screen.onkey(r_paddle.move_down, "Down")
-screen.onkey(l_paddle.move_up, "w")
-screen.onkey(l_paddle.move_down, "s")
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.down, "Down")
+screen.onkey(snake.left, "Left")
+screen.onkey(snake.right, "Right")
 
 game_on = True
 while game_on:
-    time.sleep(ball.move_speed)
     screen.update()
-    ball.move()
-# detect collision with wall
-    if ball.ycor() > 280 or ball.ycor() < -280:
-        ball.bounce()
-# detect collision with right paddle
-    if ball.distance(r_paddle) < 50 and ball.xcor() > 320 or ball.distance(l_paddle) < 50 and ball.xcor() < -320:
-        ball.bounce_back()
-# out of the bound
-    if ball.xcor() > 380:
-        ball.restart()
-        score.l_point()
+    time.sleep(0.1)
+    snake.move()
 
-    if ball.xcor() < -380:
-        ball.restart()
-        score.r_point()
+    # Detect collision with food.
+    if snake.head.distance(food) < 15:
+        food.refresh()
+        snake.extend()
+        score.increase_score()
+
+    # Detect collision with wall.
+    if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
+        score.reset()
+        snake.reset()
+
+    # Detect collision with tail.
+    for segment in snake.segments:
+        if segment == snake.head:
+            pass
+        elif snake.head.distance(segment) < 10:
+            score.reset()
+            snake.reset()
 
 screen.exitonclick()
