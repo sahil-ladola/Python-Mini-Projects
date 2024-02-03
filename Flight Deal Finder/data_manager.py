@@ -1,4 +1,5 @@
 import requests
+import os
 
 SHEETY_PRICES_ENDPOINT = os.environ["SHEETY_PRICES_ENDPOINT"]
 
