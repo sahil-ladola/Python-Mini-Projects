@@ -2,7 +2,7 @@ import requests
 from flight_data import FlightData
 import os
 
-TEQUILA_APIKEY = "_VvG1yRkyOoTtM5T2uFB0OpZkMZxR7hr"
+TEQUILA_APIKEY = os.environ["TEQUILA_APIKEY"]
 TEQUILA_ENDPOINT = "https://api.tequila.kiwi.com"
 
 
